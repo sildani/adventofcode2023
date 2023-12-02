@@ -22,7 +22,12 @@ func TestProcess(t *testing.T) {
 
 func TestParseGame(t *testing.T) {
     input := "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
-    expected := game{id: 1, cubes: cubes{blue: 9, red: 5, green: 4}}
+    // my first iteration assumed new cubes were pulled out of the bag each
+    // time but that is not correct!! Let's fix that.
+    // old expectation
+    // expected := game{id: 1, cubes: cubes{blue: 9, red: 5, green: 4}}
+    // new expectation:
+    expected := game{id: 1, cubes: cubes{blue: 6, red: 4, green: 2}}
     actual := ParseGame(input)
     if !reflect.DeepEqual(actual, expected) {
         t.Fatalf(`got %v, expected %v`, actual, expected)

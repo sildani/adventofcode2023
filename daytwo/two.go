@@ -43,11 +43,11 @@ func ParseGame(input string) game {
             currentColor := cube[strings.Index(cube, " ")+1:]
             switch currentColor {
             case "red":
-                redCubes = redCubes + currentCount
+                if currentCount > redCubes { redCubes = currentCount }
             case "blue":
-                blueCubes = blueCubes + currentCount
+                if currentCount > blueCubes { blueCubes = currentCount }
             case "green":
-                greenCubes = greenCubes + currentCount
+                if currentCount > greenCubes { greenCubes = currentCount }
             default:
                 // ignore
             }
