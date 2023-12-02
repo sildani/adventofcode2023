@@ -19,7 +19,7 @@ func TestProcess(t *testing.T) {
         t.Fatalf(`got %v, expected %v`, actualPartOne, expectedPartOne)
     }
     if actualPartTwo != expectedPartTwo {
-        t.Fatalf(`got %v, expected %v`, actualPartOne, expectedPartOne)
+        t.Fatalf(`got %v, expected %v`, actualPartTwo, expectedPartTwo)
     }
 }
 
