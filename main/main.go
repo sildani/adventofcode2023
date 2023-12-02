@@ -48,5 +48,5 @@ func main() {
     if (day == 1) {
         results = append(results, dayone.Process(input))
     } 
-    fmt.Printf("Answers: %v\n\n", results)
+    fmt.Printf("Answer: %v\n\n", results)
 }
