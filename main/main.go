@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	dayone "github.com/sildani/adventofcode2023/dayone"
+    daytwo "github.com/sildani/adventofcode2023/daytwo"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 
     fmt.Println("Welcome to Advent of Code 2023 Solutions by Daniel!")
 
-    fmt.Println("Please enter day [1-1]:")
+    fmt.Println("Please enter day [1-2]:")
     dayInput, err := inputReader.ReadString('\n')
     if err != nil {
         log.Fatal(err)
@@ -24,9 +25,12 @@ func main() {
 
     day, _ := strconv.Atoi(strings.Trim(dayInput, "\n"))
     var fileName string
-    if day == 1 {
+    switch day {
+    case 1:
         fileName = "./inputs/dayone/input.txt"
-    } else {
+    case 2:
+        fileName = "./inputs/daytwo/input.txt"
+    default:
         fmt.Println("Value must be [1-1]")
         os.Exit(1)
     }
@@ -45,8 +49,14 @@ func main() {
     }
 
     var results []int
-    if (day == 1) {
+    switch day {
+    case 1:
         results = append(results, dayone.Process(input))
-    } 
+    case 2:
+        results = append(results, daytwo.Process(input))
+        // 141 is not correct!
+    default:
+        // ignore
+    }
     fmt.Printf("Answer: %v\n\n", results)
 }
