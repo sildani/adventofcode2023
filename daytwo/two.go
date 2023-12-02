@@ -16,15 +16,17 @@ type game struct {
     cubes cubes
 }
 
-func Process(input []string) int {
-    var sum int
+func Process(input []string) (int, int) {
+    var partOneSum int
+    var partTwoSum int
     for _, line := range input {
         game := ParseGame(line)
         if game.cubes.red <= 12 && game.cubes.blue <= 14 && game.cubes.green <= 13 {
-            sum = sum + game.id
+            partOneSum = partOneSum + game.id
         }
+        partTwoSum = partTwoSum + (game.cubes.red * game.cubes.blue * game.cubes.green)
     }
-    return sum
+    return partOneSum, partTwoSum
 }
 
 func ParseGame(input string) game {

@@ -53,8 +53,8 @@ func main() {
     case 1:
         results = append(results, dayone.Process(input))
     case 2:
-        results = append(results, daytwo.Process(input))
-        // 141 is not correct!
+        partOneResult, partTwoResult := daytwo.Process(input)
+        results = append(results, partOneResult, partTwoResult)
     default:
         // ignore
     }

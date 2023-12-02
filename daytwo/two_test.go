@@ -13,10 +13,13 @@ func TestProcess(t *testing.T) {
         "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
         "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
     }
-    expected := 8
-    actual := Process(input)
-    if !reflect.DeepEqual(actual, expected) {
-        t.Fatalf(`got %v, expected %v`, actual, expected)
+    expectedPartOne, expectedPartTwo := 8, 2286
+    actualPartOne, actualPartTwo := Process(input)
+    if actualPartOne != expectedPartOne {
+        t.Fatalf(`got %v, expected %v`, actualPartOne, expectedPartOne)
+    }
+    if actualPartTwo != expectedPartTwo {
+        t.Fatalf(`got %v, expected %v`, actualPartOne, expectedPartOne)
     }
 }
 
