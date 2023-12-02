@@ -27,9 +27,9 @@ func main() {
     var fileName string
     switch day {
     case 1:
-        fileName = "./inputs/dayone/input.txt"
+        fileName = "./dayone/input.txt"
     case 2:
-        fileName = "./inputs/daytwo/input.txt"
+        fileName = "./daytwo/input.txt"
     default:
         fmt.Println("Value must be [1-1]")
         os.Exit(1)
