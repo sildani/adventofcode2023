@@ -1,14 +1,14 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"log"
-	"os"
-	"strconv"
-	"strings"
+    "bufio"
+    "fmt"
+    "log"
+    "os"
+    "strconv"
+    "strings"
 
-	dayone "github.com/sildani/adventofcode2023/dayone"
+    dayone "github.com/sildani/adventofcode2023/dayone"
     daytwo "github.com/sildani/adventofcode2023/daytwo"
 )
 
