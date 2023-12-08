@@ -1,7 +1,6 @@
 package daythree
 
 import (
-    "reflect"
     "testing"
 )
 
@@ -21,235 +20,666 @@ func TestProcess(t *testing.T) {
     expected := 4361
     actual := Process(input)
     if actual != expected {
-        t.Fatalf(`got %v, expected %v`, actual, expected)
+        t.Errorf(`Test '%v': expected '%v', got '%v'`, "TestProcess", expected, actual)
     }
 }
 
-func TestParseLine(t *testing.T) {
-    inputs := []string{
-        "467..114..",
-        "...*......",
-        "..35..633.",
-        "......#...",
-        "617*......",
-        ".....+.58.",
-        "..592.....",
-        "......755.",
-        "...$.*....",
-        ".664.598..",
-        "...*44....",
-    }
-    expected := [][]token{
-        {
-            { value: "467", index: 0, isDigit: true  },
-            { value: "114", index: 5, isDigit: true  },
+func TestProcess_TopLeftCorner(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_TopLeftCorner symbol right before": {
+            input: []string{
+                "+627.....",
+                "........",
+            },
+            expected: 627,
         },
-        {
-            { value: "*",   index: 3, isDigit: false },
+        "TestProcess_TopLeftCorner symbol right after": {
+            input: []string{
+                "627+....",
+                "........",
+            },
+            expected: 627,
         },
-        {
-            { value: "35",  index: 2, isDigit: true  },
-            { value: "633", index: 6, isDigit: true  },
+        "TestProcess_TopLeftCorner symbol below on edge": {
+            input: []string{
+                "627.....",
+                "+.......",
+            },
+            expected: 627,
         },
-        {
-            { value: "#",   index: 6, isDigit: false },
+        "TestProcess_TopLeftCorner symbol below": {
+            input: []string{
+                "627.....",
+                ".+......",
+            },
+            expected: 627,
         },
-        {
-            { value: "617", index: 0, isDigit: true  },
-            { value: "*",   index: 3, isDigit: false },
+        "TestProcess_TopLeftCorner symbol below at edge": {
+            input: []string{
+                "627.....",
+                "...+....",
+            },
+            expected: 627,
         },
-        {
-            { value: "+",   index: 5, isDigit: false },
-            { value: "58",  index: 7, isDigit: true  },
-        },
-        {
-            { value: "592", index: 2, isDigit: true  },
-        },
-        {
-            { value: "755", index: 6, isDigit: true  },
-        },
-        {
-            { value: "$",   index: 3, isDigit: false },
-            { value: "*",   index: 5, isDigit: false },
-        },
-        {
-            { value: "664", index: 1, isDigit: true  },
-            { value: "598", index: 5, isDigit: true  },
-        },
-        {
-            { value: "*",   index: 3, isDigit: false },
-            { value: "44",  index: 4, isDigit: true  },
+        "TestProcess_TopLeftCorner not a part number": {
+            input: []string{
+                "627.....",
+                "........",
+            },
+            expected: 0,
         },
     }
-    for i := range inputs {
-        actual := ParseLine(inputs[i])
-        if !reflect.DeepEqual(actual, expected[i]) {
-            t.Fatalf(`got %v, expected %v`, actual, expected[i])
-        }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
     }
 }
 
-// write a test for a function that takes two lines (current and previous)
-// and checks for valid numbers in the current line. previous will be nil
-// for first line. test for not marking the same number valid TWICE
-func TestParsePartNumbers(t *testing.T) {
-    inputs := [][][]token{
-        {
-            {
-                {},
+func TestProcess_TopRightCorner(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_TopRightCorner symbol right before": {
+            input: []string{
+                "....+627",
+                "........",
             },
-            {
-                { value: "467", index: 0, isDigit: true  },
-                { value: "114", index: 5, isDigit: true  },
-            },
-            {},
+            expected: 627,
         },
-        {
-            {
-                { value: "467", index: 0, isDigit: true  },
-                { value: "114", index: 5, isDigit: true  },
+        "TestProcess_TopRightCorner symbol right after": {
+            input: []string{
+                "....627+",
+                "........",
             },
-            {
-                { value: "*",   index: 3, isDigit: false },
-            },
-            {},
+            expected: 627,
         },
-        {
-            {
-                { value: "*",   index: 3, isDigit: false },
+        "TestProcess_TopRightCorner symbol below on edge": {
+            input: []string{
+                ".....627",
+                ".......+",
             },
-            {
-                { value: "35",  index: 2, isDigit: true  },
-                { value: "633", index: 6, isDigit: true  },
-            },
-            {
-                { value: "467", index: 0, isDigit: true  },
-            },
+            expected: 627,
         },
-        {
-            {
-                { value: "35",  index: 2, isDigit: true  },
-                { value: "633", index: 6, isDigit: true  },
+        "TestProcess_TopRightCorner symbol below": {
+            input: []string{
+                ".....627",
+                "......+.",
             },
-            {
-                { value: "#",   index: 6, isDigit: false },
-            },
-            {
-                { value: "35",  index: 2, isDigit: true  },
-            },
+            expected: 627,
         },
-        {
-            {
-                { value: "#",   index: 6, isDigit: false },
+        "TestProcess_TopRightCorner symbol below at edge": {
+            input: []string{
+                ".....627",
+                "....+...",
             },
-            {
-                { value: "617", index: 0, isDigit: true  },
-                { value: "*",   index: 3, isDigit: false },
-            },
-            {
-                { value: "633", index: 6, isDigit: true  },
-            },
+            expected: 627,
         },
-        {
-            {
-                { value: "617", index: 0, isDigit: true  },
-                { value: "*",   index: 3, isDigit: false },
+        "TestProcess_TopRightCorner not a part number": {
+            input: []string{
+                ".....627",
+                "........",
             },
-            {
-                { value: "+",   index: 5, isDigit: false },
-                { value: "58",  index: 7, isDigit: true  },
-            },
-            {
-                { value: "617", index: 0, isDigit: true  },
-            },
-        },
-        {
-            {
-                { value: "+",   index: 5, isDigit: false },
-                { value: "58",  index: 7, isDigit: true  },
-            },
-            {
-                { value: "592", index: 2, isDigit: true  },
-            },
-            {},
-        },
-        {
-            {
-                { value: "592", index: 2, isDigit: true  },
-            },
-            {
-                { value: "755", index: 6, isDigit: true  },
-            },
-            {
-                { value: "592", index: 2, isDigit: true  },
-            },
-        },
-        {
-            {
-                { value: "755", index: 6, isDigit: true  },
-            },
-            {
-                { value: "$",   index: 3, isDigit: false },
-                { value: "*",   index: 5, isDigit: false },
-            },
-            {},
-        },
-        {
-            {
-                { value: "$",   index: 3, isDigit: false },
-                { value: "*",   index: 5, isDigit: false },
-            },
-            {
-                { value: "664", index: 1, isDigit: true  },
-                { value: "598", index: 5, isDigit: true  },
-            },
-            {
-                { value: "755", index: 6, isDigit: true  },
-            },
-        },
-        {
-            {
-                { value: "664", index: 1, isDigit: true  },
-                { value: "598", index: 5, isDigit: true  },
-            },
-            {
-                { value: "*",   index: 3, isDigit: false },
-                { value: "44",  index: 4, isDigit: true  },
-            },
-            {
-                { value: "664", index: 1, isDigit: true  },
-                { value: "598", index: 5, isDigit: true  },
-            },
+            expected: 0,
         },
     }
-    expected := [][]token{
-        {},
-        {
-            { value: "467", index: 0, isDigit: true  },},
-        {
-            { value: "35",  index: 2, isDigit: true  },},
-        {
-            { value: "633", index: 6, isDigit: true  },},
-        {
-            { value: "617", index: 0, isDigit: true  },},
-        {},
-        {
-            { value: "592", index: 2, isDigit: true  },},
-        {},
-        {
-            { value: "755", index: 6, isDigit: true  },},
-        {
-            { value: "664", index: 1, isDigit: true  },
-            { value: "598", index: 5, isDigit: true  },
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_BottomLeftCorner(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_BottomLeftCorner symbol right before": {
+            input: []string{
+                "........",
+                "+627....",
+            },
+            expected: 627,
         },
-        {
-            { value: "44",  index: 4, isDigit: true  },
+        "TestProcess_BottomLeftCorner symbol right after": {
+            input: []string{
+                "........",
+                "627+....",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomLeftCorner symbol above on edge": {
+            input: []string{
+                "+.......",
+                "627.....",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomLeftCorner symbol above": {
+            input: []string{
+                ".+......",
+                "627.....",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomLeftCorner symbol above at edge": {
+            input: []string{
+                "...+....",
+                "627.....",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomLeftCorner not a part number": {
+            input: []string{
+                "........",
+                "627.....",
+            },
+            expected: 0,
         },
     }
-    for i := range inputs {
-        actual := ParsePartNumbers(inputs[i][0], inputs[i][1], inputs[i][2])
-        if !reflect.DeepEqual(actual, expected[i]) {
-            t.Fatalf(`got %v, expected %v`, actual, expected[i])
-        }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_BottomRightCorner(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_BottomRightCorner symbol right before": {
+            input: []string{
+                "........",
+                "....+627",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomRightCorner symbol right after": {
+            input: []string{
+                "........",
+                "....627+",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomRightCorner symbol above": {
+            input: []string{
+                "......+.",
+                ".....627",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomRightCorner symbol above on edge": {
+            input: []string{
+                ".......+",
+                ".....627",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomRightCorner symbol above at edge": {
+            input: []string{
+                "....+...",
+                ".....627",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomRightCorner not a part number": {
+            input: []string{
+                "........",
+                ".....627",
+            },
+            expected: 0,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_LeftEdge(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_LeftEdge symbol right before": {
+            input: []string{
+                "........",
+                "+627....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol right after": {
+            input: []string{
+                "........",
+                "627+....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol below on edge": {
+            input: []string{
+                "........",
+                "627.....",
+                "+.......",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol below": {
+            input: []string{
+                "........",
+                "627.....",
+                ".+......",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol below at edge": {
+            input: []string{
+                "........",
+                "627.....",
+                "...+....",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol above on edge": {
+            input: []string{
+                "+.......",
+                "627.....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol above": {
+            input: []string{
+                ".+......",
+                "627.....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge symbol above at edge": {
+            input: []string{
+                "...+....",
+                "627.....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge not a part number": {
+            input: []string{
+                "........",
+                "627.....",
+                "........",
+            },
+            expected: 0,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_RightEdge(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_RightEdge symbol right before": {
+            input: []string{
+                "........",
+                "....627+",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol right after": {
+            input: []string{
+                "........",
+                "....+627",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol below on edge": {
+            input: []string{
+                "........",
+                ".....627",
+                ".......+",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol below": {
+            input: []string{
+                "........",
+                ".....627",
+                "......+.",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol below at edge": {
+            input: []string{
+                "........",
+                ".....627",
+                "....+...",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol above on edge": {
+            input: []string{
+                ".......+",
+                ".....627",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol above": {
+            input: []string{
+                "......+.",
+                ".....627",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_RightEdge symbol above at edge": {
+            input: []string{
+                "....+...",
+                ".....627",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge not a part number": {
+            input: []string{
+                "........",
+                ".....627",
+                "........",
+            },
+            expected: 0,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_TopEdge(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_TopEdge symbol right before": {
+            input: []string{
+                "..+627..",
+                "........",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_TopEdge symbol right after": {
+            input: []string{
+                "..627+..",
+                "........",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_TopEdge symbol below on edge": {
+            input: []string{
+                "..627...",
+                "..+.....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_TopEdge symbol below": {
+            input: []string{
+                "..627...",
+                "...+....",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_TopEdge symbol below at edge": {
+            input: []string{
+                "..627...",
+                ".....+..",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_LeftEdge not a part number": {
+            input: []string{
+                "........",
+                "627.....",
+                "........",
+            },
+            expected: 0,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_BottomEdge(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_BottomEdge symbol right before": {
+            input: []string{
+                "........",
+                "........",
+                "..+627..",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomEdge symbol right after": {
+            input: []string{
+                "........",
+                "........",
+                "..627+..",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomEdge symbol below on edge": {
+            input: []string{
+                "........",
+                "..+.....",
+                "..627...",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomEdge symbol below": {
+            input: []string{
+                "........",
+                "...+....",
+                "..627...",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomEdge symbol below at edge": {
+            input: []string{
+                "........",
+                ".....+..",
+                "..627...",
+            },
+            expected: 627,
+        },
+        "TestProcess_BottomEdge not a part number": {
+            input: []string{
+                "........",
+                "627.....",
+                "........",
+            },
+            expected: 0,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_Middle(t *testing.T) {
+    tests := map[string]struct {
+        input    []string
+        expected int
+    }{
+        "TestProcess_Middle symbol right before": {
+            input: []string{
+                "........",
+                "..627+..",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol right after": {
+            input: []string{
+                "........",
+                "..+627..",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol below on edge": {
+            input: []string{
+                "........",
+                "...627..",
+                ".....+..",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol below": {
+            input: []string{
+                "........",
+                "...627..",
+                "....+...",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol below at edge": {
+            input: []string{
+                "........",
+                "...627..",
+                "..+.....",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol above on edge": {
+            input: []string{
+                ".....+..",
+                "...627..",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol above": {
+            input: []string{
+                "....+...",
+                "...627..",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle symbol above at edge": {
+            input: []string{
+                "..+.....",
+                "...627..",
+                "........",
+            },
+            expected: 627,
+        },
+        "TestProcess_Middle not a part number": {
+            input: []string{
+                "........",
+                "...627..",
+                "........",
+            },
+            expected: 0,
+        },
+        "TestProcess_Middle sample": {
+            input: []string{
+                "...*......",
+                "..35..633.",
+                "......#...",
+            },
+            expected: 633 + 35,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := Process(test.input)
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
+    }
+}
+
+func TestProcess_isSymbol(t *testing.T) {
+    tests := map[string]struct {
+        input    []rune
+        expected bool
+    }{
+        "isSymbol a number": {
+            input:    []rune("1"),
+            expected: false,
+        },
+        "isSymbol a dot": {
+            input:    []rune("."),
+            expected: false,
+        },
+        "isSymbol a symbol": {
+            input:    []rune("+"),
+            expected: true,
+        },
+    }
+    for name, test := range tests {
+        t.Run(name, func(t *testing.T) {
+            actual := isSymbol(test.input[0])
+            if actual != test.expected {
+                t.Errorf(`Test '%v': expected '%v', got '%v'`, name, test.expected, actual)
+            }
+        })
     }
 }
