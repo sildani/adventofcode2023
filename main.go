@@ -60,7 +60,6 @@ func main() {
         results = append(results, partOneResult, partTwoResult)
     case 3:
         results = append(results, daythree.Process(input))
-        // 1931271 is too high
     default:
         // ignore
     }
